@@ -1,0 +1,22 @@
+services:
+  wg-easy:
+    image: ghcr.io/wg-easy/wg-easy:latest
+    container_name: wg-easy
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PORT: ${UI_PORT}
+      WG_PORT: ${WG_PORT}
+    volumes:
+      - ./data:/etc/wireguard
+    ports:
+      - "${WG_PORT}:${WG_PORT}/udp"
+      - "${UI_PORT}:${UI_PORT}/tcp"
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      net.ipv4.ip_forward: "1"
+      net.ipv4.conf.all.src_valid_mark: "1"
+
